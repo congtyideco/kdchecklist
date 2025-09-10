@@ -245,32 +245,33 @@
 
     const initialTasks = [
         // Quản lý & Chăm sóc KH Hiện tại
-        { id: 1, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Liên hệ, chăm sóc khách hàng cũ theo danh sách', status: 'not-started', notes: '', deadline: '' },
-        { id: 2, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Giới thiệu sản phẩm mới, chương trình khuyến mãi đến KH cũ', status: 'not-started', notes: '', deadline: '' },
-        { id: 3, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Giải đáp thắc mắc, xử lý khiếu nại (nếu có)', status: 'not-started', notes: '', deadline: '' },
-        { id: 4, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Đối chiếu và nhắc nhở khách hàng thanh toán công nợ đúng hạn', status: 'not-started', notes: 'Phối hợp với kế toán', deadline: '' },
-        { id: 5, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thúc đẩy khách hàng lên đơn hàng mới', status: 'not-started', notes: '', deadline: '' },
- { id: 6, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Xử lý các đơn hàng chuỗi NT ( nếu có)', status: 'not-started', notes: '', deadline: '' },
+        { id: 1, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Tương tác lên đơn cho khách hàng nhóm thuốc ( tra cứu ứng dụng)', status: 'not-started', notes: '', deadline: '' },
+        { id: 2, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Tương tác lên đơn cho khách hàng nhóm không phải thuốc ( tra cứu ứng dụng)', notes: '', deadline: '' },
+		{ id: 3, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện gởi thông tin sản phẩm- chương trình KM cho khác hàng', status: 'not-started', notes: '', deadline: '' },
+        { id: 4, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Xử lý phát sinh giao dịch trong kỳ: hợp đồng- chứng từ- đổi trả- thông báo', status: 'not-started', notes: '', deadline: '' },
+        { id: 5, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Đối chiếu và nhắc nhở khách hàng thanh toán công nợ đúng hạn', status: 'not-started', notes: 'Phối hợp với kế toán', deadline: '' },
+        { id: 6, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Xử lý các đơn hàng Chuỗi NT trong kỳ: đơn hàng- công nợ- đổi trả-báo giá/thông báo ', status: 'not-started', notes: '', deadline: '' },
+ { id: 6, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Cập nhật dữ liệu trong kỳ đặt hàng lên ứng dụng quản lý ', status: 'not-started', notes: '', deadline: '' },
         // Phát triển Khách hàng Mới
-        { id: 6, category: 'Phát triển Khách hàng Mới', name: 'Lập kế hoạch tìm kiếm, tiếp cận KH tiềm năng', status: 'not-started', notes: '', deadline: '' },
-        { id: 7, category: 'Phát triển Khách hàng Mới', name: 'Tiếp cận KH mới (gọi điện, email, gặp mặt)', status: 'not-started', notes: 'Mục tiêu: 5 KH mới/tuần', deadline: '' },
-        { id: 8, category: 'Phát triển Khách hàng Mới', name: 'Kiểm tra- ra sót hoạt động giao dịch trên báo cáo giao dịch', status: 'not-started', notes: '', deadline: '' },
-        { id: 9, category: 'Phát triển Khách hàng Mới', name: 'Gửi báo giá, đàm phán, thương lượng hợp đồng', status: 'not-started', notes: '', deadline: '' },
-        { id: 10, category: 'Phát triển Khách hàng Mới', name: 'Hoàn tất thủ tục mở khách hàng mới trên hệ thống', status: 'not-started', notes: '', deadline: '' },
+        { id: 6, category: 'Phát triển Khách hàng Mới', name: 'Lập kế hoạch tìm kiếm, tiếp cận KH nhóm không phải thuốc', status: 'not-started', notes: '', deadline: '' },
+        { id: 7, category: 'Phát triển Khách hàng Mới', name: 'Lập kế hoạch tìm kiếm, tiếp cận KH nhóm thuốc', status: 'not-started', notes: 'Mục tiêu: 5 KH mới/tuần', deadline: '' },
+        { id: 8, category: 'Phát triển Khách hàng Mới', name: 'Khi báo hoạt động giao dịch - kiểm tra nội dung khai định kỳ', status: 'not-started', notes: '', deadline: '' },
+        { id: 9, category: 'Phát triển Khách hàng Mới', name: 'Công tác chuẩn bị báo giá - tài liệu - thông tin gởi khách hàng ', status: 'not-started', notes: '', deadline: '' },
+        { id: 10, category: 'Phát triển Khách hàng Mới', name: 'Xem lại kế hoạch -định hướng giao - KPI - điều chỉnh', status: 'not-started', notes: '', deadline: '' },
 
         // Điều phối Đơn hàng & Vận hành
-        { id: 11, category: 'Điều phối Đơn hàng & Vận hành', name: 'Tiếp nhận và kiểm tra thông tin đơn hàng', status: 'not-started', notes: '', deadline: '' },
-        { id: 12, category: 'Điều phối Đơn hàng & Vận hành', name: 'Lập đơn hàng trên hệ thống phần mềm (ERP/CRM)', status: 'not-started', notes: '', deadline: '' },
-        { id: 13, category: 'Điều phối Đơn hàng & Vận hành', name: 'Phối hợp với kho và kế toán để xử lý đơn hàng', status: 'not-started', notes: 'Đảm bảo tuân thủ GDP, SOP', deadline: '' },
+        { id: 11, category: 'Điều phối Đơn hàng & Vận hành', name: 'Kiểm tra thông tin các đơn treo trong tuần/kỳ tháng', status: 'not-started', notes: '', deadline: '' },
+        { id: 12, category: 'Điều phối Đơn hàng & Vận hành', name: 'Điều phối xử lý với các bộ phận khác cho đơn hàng treo', status: 'not-started', notes: '', deadline: '' },
+        { id: 13, category: 'Điều phối Đơn hàng & Vận hành', name: 'Xem lại hàng hóa - nội dung cung cấp cho khách hàng trong kỳ', status: 'not-started', notes: 'Đảm bảo tuân thủ GDP, SOP', deadline: '' },
         { id: 14, category: 'Điều phối Đơn hàng & Vận hành', name: 'Theo dõi tiến trình giao hàng và xác nhận với khách hàng', status: 'not-started', notes: '', deadline: '' },
         { id: 15, category: 'Điều phối Đơn hàng & Vận hành', name: 'Hỗ trợ xử lý các vấn đề về hóa đơn, chứng từ, thanh toán', status: 'not-started', notes: '', deadline: '' },
 
         // Báo cáo & Công việc Khác
-        { id: 16, category: 'Báo cáo & Công việc Khác', name: 'Lập báo cáo công việc hàng tuần từ bảng kế hoạch', status: 'not-started', notes: '', deadline: '' },
-        { id: 17, category: 'Báo cáo & Công việc Khác', name: 'Ra soát cập nhật báo cáo giao dịch khách hàng cho đúng khai báo', status: 'not-started', notes: 'Hạn cuối: ngày 2 của tháng sau', deadline: '' },
+        { id: 16, category: 'Báo cáo & Công việc Khác', name: 'Xem lại kế hoạch- báo cáo tuần: chỉnh- bổ sung- khai', status: 'not-started', notes: '', deadline: '' },
+        { id: 17, category: 'Báo cáo & Công việc Khác', name: 'Chạy lại các dữ liệu khách hàng trong kỳ ứng dụng/báo cáo giao dịch', status: 'not-started', notes: 'Hạn cuối: ngày 2 của tháng sau', deadline: '' },
         { id: 18, category: 'Báo cáo & Công việc Khác', name: 'Hoàn thành xem lại các đơn chưa xử lý- tổng kết chuyển sang tuần sau', status: 'not-started', notes: '', deadline: '' },
-        { id: 19, category: 'Báo cáo & Công việc Khác', name: 'Điều chỉnh lại kế hoạch ký tới ', status: 'not-started', notes: '', deadline: '' },
-        { id: 20, category: 'Báo cáo & Công việc Khác', name: 'Tổng hợp số liệu cuối kỳ tuần/ tháng cho báo cáo', status: 'not-started', notes: '', deadline: '' }
+       
+        { id: 19, category: 'Báo cáo & Công việc Khác', name: 'Tổng hợp số liệu cuối kỳ tuần/ tháng cho báo cáo tuần/ tháng', status: 'not-started', notes: '', deadline: '' }
     ];
     
     document.addEventListener('DOMContentLoaded', () => {
