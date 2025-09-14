@@ -245,26 +245,26 @@
 
     const initialTasks = [
         // Quản lý & Chăm sóc KH Hiện tại
-        { id: 1, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Theo dõi đơn hàng - khách hàng đã lấy nhóm dược mỹ phẩm (UVS-dầu gội đen)', status: 'not-started', notes: '', deadline: '' },
-        { id: 2, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Theo dõi đơn hàng - cập nhật khách hàng đã lấy nhóm thuốc', status: 'not-started', notes: '', deadline: '' },
-        { id: 3, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Triển khai nội dung thông tin sản phẩm mới/ chương trình đến khách hàng', status: 'not-started', notes: '', deadline: '' },
-        { id: 4, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Đối chiếu và nhắc nhở khách hàng thanh toán công nợ đúng hạn', status: 'not-started', notes: 'Phối hợp với kế toán', deadline: '' },
-        { id: 5, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Xử lý và kiểm tra hoàn tất các đơn hàng phát sinh trong tuần', status: 'not-started', notes: '', deadline: '' },
-		{ id: 6, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Xử lý và điều phối các đơn hàng chuỗi NT ( nếu có)', status: 'not-started', notes: '', deadline: '' },
+        { id: 1, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện xử lý -kiểm tra khách hàng đặt hàng nhóm Dược mỹ phẩm UVS -Dầu gội', status: 'not-started', notes: '', deadline: '' },
+        { id: 2, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện xử lý -kiểm tra khách hàng đặt hàng nhóm Thuốc', status: 'not-started', notes: '', deadline: '' },
+        { id: 3, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện triển khai giới thiệu thuốc mới/sản phẩm mới/gởi CTKM dến khách hàng', status: 'not-started', notes: '', deadline: '' },
+        { id: 4, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện xử lý thủ tục khách hàng đổi tra sản phẩm - trao đổi nội bộ', status: 'not-started', notes: 'Phối hợp với kế toán', deadline: '' },
+        { id: 5, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện kiểm tra công nợ -xử lý công nợ đến hạn/quá hạn trong kỳ', status: 'not-started', notes: '', deadline: '' },
+		{ id: 6, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện đối chiếu hàng- xử lý đơn hàng cho chuỗi NT ( nếu có)', status: 'not-started', notes: '', deadline: '' },
  
         // Phát triển Khách hàng Mới
-        { id: 1, category: 'Phát triển Khách hàng Mới', name: 'Triển khai tìm kiếm phát triển khách hàng mới nhóm dược mỹ phẩm UVS-dầu gội đen', status: 'not-started', notes: '', deadline: '' },
-        { id: 2, category: 'Phát triển Khách hàng Mới', name: 'Triển khai tìm kiếm phát triển khách hàng mới nhóm thuốc', status: 'not-started', notes: 'Mục tiêu: 5 KH mới/tuần', deadline: '' },
-        { id: 3, category: 'Phát triển Khách hàng Mới', name: 'Kiểm tra- cập nhật báo cáo giao dịch theo phát sinh mới', status: 'not-started', notes: '', deadline: '' },
+        { id: 1, category: 'Phát triển Khách hàng Mới', name: 'Thực hiện mục tiêu/kế hoạch phát triển khách hàng nhóm UVS- Dầu gội phủ bạc', status: 'not-started', notes: '', deadline: '' },
+        { id: 2, category: 'Phát triển Khách hàng Mới', name: 'Thực hiện mục tiêu/kế hoạch phát triển khách hàng nhóm thuốc', status: 'not-started', notes: 'Mục tiêu: 5 KH mới/tuần', deadline: '' },
+        { id: 3, category: 'Phát triển Khách hàng Mới', name: 'Thực hiện kiểm tra- cập nhật lại báo cáo giao dịch theo phát sinh mới', status: 'not-started', notes: '', deadline: '' },
         { id: 4, category: 'Phát triển Khách hàng Mới', name: 'Gửi báo giá, đàm phán, thương lượng hợp đồng', status: 'not-started', notes: '', deadline: '' },
         { id: 5, category: 'Phát triển Khách hàng Mới', name:'Hoàn tất thủ tục mở khách hàng mới trên hệ thống', status: 'not-started', notes: '', deadline: '' },
 
         // Điều phối Đơn hàng & Vận hành
         { id: 1, category: 'Điều phối Đơn hàng & Vận hành', name: 'Xử lý - đối soát các nội dung cung cấp thông tin, chứng từ cho khách hàng', status: 'not-started', notes: '', deadline: '' },
-        { id: 2, category: 'Điều phối Đơn hàng & Vận hành', name: 'Cập nhật lại các dữ liệu lên ứng dụng trong kỳ: đặt hàng/ chuo6io4i NT', status: 'not-started', notes: '', deadline: '' },
-        { id: 3, category: 'Điều phối Đơn hàng & Vận hành', name: 'Cập nhật lại khai báo cáo giao dịch khách định kỳ / phát sinh mới', status: 'not-started', notes: 'Đảm bảo tuân thủ GDP, SOP', deadline: '' },
+        { id: 2, category: 'Điều phối Đơn hàng & Vận hành', name: 'Cập nhật lại các dữ liệu lên ứng dụng trong kỳ: khách hàng đặt hàng / chuôi NT ( nếu có)', status: 'not-started', notes: '', deadline: '' },
+        { id: 3, category: 'Điều phối Đơn hàng & Vận hành', name: 'Xử lý các thủ tục phát sinh liên quan đến chứng từ/ tài liệu/hàng hóa nội bộ ', status: 'not-started', notes: 'Đảm bảo tuân thủ GDP, SOP', deadline: '' },
         { id: 4, category: 'Điều phối Đơn hàng & Vận hành', name: 'Theo dõi tiến trình giao hàng và xác nhận với khách hàng/ đổi trả hàng phát sinh', status: 'not-started', notes: '', deadline: '' },
-        { id: 5, category: 'Điều phối Đơn hàng & Vận hành', name: 'Xử lý đối chiếu công nợ với khách hàng/ nội bộ với kế toán', status: 'not-started', notes: '', deadline: '' },
+        { id: 5, category: 'Điều phối Đơn hàng & Vận hành', name: 'Xử lý thông tin báo giá/văn bản thông báo giá/ in lưu chứng từ công việc trong tuần', status: 'not-started', notes: '', deadline: '' },
 
         // Báo cáo & Công việc Khác
         { id: 1, category: 'Báo cáo & Công việc Khác', name: 'Ra sót kế hoạch - bấm hoàn thành- báo cáo nội dung lưu chuyển báo cáo', status: 'not-started', notes: '', deadline: '' },
