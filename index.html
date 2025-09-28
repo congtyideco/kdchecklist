@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Checklist Pro - Theo dõi công việc Kinh doanh</title>
+    <title>Sales Checklist Pro - Nâng Cấp</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
-        /* Thêm tiền tố 'sales-checklist-' vào các lớp CSS tùy chỉnh */
         body { background-color: #f0f2f5; font-size: 14px; }
         .sales-checklist-dashboard { position: sticky; top: 20px; }
         .sales-checklist-status-select { font-weight: bold; }
@@ -15,7 +14,6 @@
         .sales-checklist-status-in-progress { color: #ffc107; border-color: #ffc107; }
         .sales-checklist-status-completed { color: #198754; border-color: #198754; }
         #sales-checklist-reportModal .modal-body { white-space: pre-wrap; font-family: monospace; background-color: #f8f9fa; }
-
         .sales-checklist-floating-btn {
             background-color: #0d6efd;
             color: white;
@@ -29,25 +27,20 @@
             display: flex;
             align-items: center;
         }
-
         .sales-checklist-floating-btn:hover {
             transform: translateY(-2px);
             box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.5);
         }
-
         .sales-checklist-floating-btn i {
             margin-right: 8px;
             font-size: 1.3rem;
         }
-        
         #sales-checklist-floatingBtn {
             background-color: #198754;
         }
-
         #sales-checklist-mainAppModal .modal-dialog { max-width: 95vw; width: 1600px; }
         #sales-checklist-mainAppModal .modal-content { height: 90vh; }
         #sales-checklist-mainAppModal .modal-body { overflow-y: auto; background-color: #f8f9fa; }
-        
         .sales-checklist-header-section {
             background-color: #0d6efd; color: white; padding: 1rem;
             border-radius: 0.5rem; margin-bottom: 1.5rem;
@@ -60,38 +53,43 @@
         }
         .sales-checklist-task-card .card-header { font-weight: bold; font-size: 1.2rem; }
         .sales-checklist-notes-input { width: 100%; border: 1px solid #eee; padding: 5px; border-radius: 4px; }
-
         .sales-checklist-delete-btn { opacity: 0.5; transition: opacity 0.2s; }
         .list-group-item:hover .sales-checklist-delete-btn { opacity: 1; }
         .btn-loading .spinner-border { width: 1rem; height: 1rem; }
-
         .container {
             padding-top: 5rem;
             padding-bottom: 5rem;
         }
-
         .text-primary {
             color: #0d6efd !important;
         }
-
         .rounded {
             border-radius: 0.5rem !important;
         }
-
         .shadow {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+        /* Style cho lỗi ghi chú */
+        .sales-checklist-notes-input.is-invalid {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+        .invalid-feedback {
+            display: none;
+            width: 100%;
+            margin-top: 0.25rem;
+            font-size: 0.875em;
+            color: #dc3545;
         }
     </style>
 </head>
 <body>
-
     <div class="container text-center py-5">
         <h1 class="mb-4 text-primary">BÁM SÁT MỤC TIÊU, BỨT PHÁ DOANH THU!</h1>
         <div class="d-flex justify-content-center">
             <img src="https://cdn.imgpile.com/f/im0vJIV_xl.png" alt="Giao diện đẹp" class="img-fluid rounded shadow" style="max-width: 80%; height: auto;">
         </div>
     </div>
-
     <div style="position: fixed; top: 60px; left: 20px; z-index: 1040; display: flex; flex-direction: column; gap: 10px;">
         <a href="https://erp-ideco.skyit.vn/#/app/dashboard/main" style="text-decoration: none;">
             <button id="sales-checklist-erpBtn" class="sales-checklist-floating-btn">
@@ -102,7 +100,10 @@
             <i class="bi bi-card-checklist"></i> Kinh doanh Checklist
         </button>
     </div>
-    
+
+    <!-- Các modal giữ nguyên như cũ (bỏ qua để tiết kiệm chỗ) -->
+    <!-- Chỉ hiển thị phần script nâng cấp -->
+
     <div class="modal fade" id="sales-checklist-selectionModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -123,7 +124,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="sales-checklist-mainAppModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
@@ -192,7 +193,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="sales-checklist-addTaskModal" tabindex="-1" aria-labelledby="sales-checklist-addTaskModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -220,58 +221,76 @@
         </div>
     </div>
 
-    <div class="modal fade" id="sales-checklist-reportModal" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Báo Cáo Nhanh Tiến Độ</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body" id="sales-checklist-reportContent"></div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button><button type="button" class="btn btn-primary" onclick="copyReport()"><i class="bi bi-clipboard"></i> Sao chép</button></div></div></div></div>
+    <div class="modal fade" id="sales-checklist-reportModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Báo Cáo Nhanh Tiến Độ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="sales-checklist-reportContent"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" onclick="copyReport()"><i class="bi bi-clipboard"></i> Sao chép</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
     const firebaseConfig = {
-  apiKey: "AIzaSyBioyt4trx5__rZkeo8rgE8I6OWR06lqiw",
-  authDomain: "kdchecklist.firebaseapp.com",
-  projectId: "kdchecklist",
-  storageBucket: "kdchecklist.firebasestorage.app",
-  messagingSenderId: "364070659551",
-  appId: "1:364070659551:web:e193f55051e9f48265906a",
-  measurementId: "G-KG196ZMX96"
-};
+        apiKey: "AIzaSyBioyt4trx5__rZkeo8rgE8I6OWR06lqiw",
+        authDomain: "kdchecklist.firebaseapp.com",
+        projectId: "kdchecklist",
+        storageBucket: "kdchecklist.firebasestorage.app",
+        messagingSenderId: "364070659551",
+        appId: "1:364070659551:web:e193f55051e9f48265906a",
+        measurementId: "G-KG196ZMX96"
+    };
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-
     let currentEmployeeId = null;
     let currentChecklistData = null;
     let selectionModal, mainAppModal, newEmployeeModal, addTaskModal;
 
+    // === CẬP NHẬT: Định nghĩa placeholder theo loại công việc ===
+    const NOTE_PLACEHOLDERS = {
+        'Quản lý & Chăm sóc KH Hiện tại': 'Doanh số - tổng số khách hàng đặt- việc đã xử lý thế nào',
+        'Phát triển Khách hàng Mới': 'Đã phát triển bao nhiêu khách hàng ; khai báo giao dịch thế nào; có lấy đơn?',
+        'Điều phối Đơn hàng & Vận hành': 'Các nội dung xử lý đơn hàng- điều phối hàng- chứng từ- thu hồi nợ - giao dịch',
+        'Báo cáo & Công việc Khác': 'Đã xừ lý phát thế nào - phối hợp - nghiệm thu ra sao'
+    };
+
     const initialTasks = [
+        // ... (giữ nguyên như file gốc)
         // Quản lý & Chăm sóc KH Hiện tại
         { id: 1, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện xử lý -kiểm tra khách hàng đặt hàng nhóm Dược mỹ phẩm UVS -Dầu gội', status: 'not-started', notes: '', deadline: '' },
         { id: 2, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện xử lý -kiểm tra khách hàng đặt hàng nhóm Thuốc', status: 'not-started', notes: '', deadline: '' },
         { id: 3, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện triển khai giới thiệu thuốc mới/sản phẩm mới/gởi CTKM dến khách hàng', status: 'not-started', notes: '', deadline: '' },
         { id: 4, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện xử lý thủ tục khách hàng đổi tra sản phẩm - trao đổi nội bộ', status: 'not-started', notes: 'Phối hợp với kế toán', deadline: '' },
         { id: 5, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện kiểm tra công nợ -xử lý công nợ đến hạn/quá hạn trong kỳ', status: 'not-started', notes: '', deadline: '' },
-		{ id: 6, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện đối chiếu hàng- xử lý đơn hàng cho chuỗi NT ( nếu có)', status: 'not-started', notes: '', deadline: '' },
- 
+        { id: 6, category: 'Quản lý & Chăm sóc KH Hiện tại', name: 'Thực hiện đối chiếu hàng- xử lý đơn hàng cho chuỗi NT ( nếu có)', status: 'not-started', notes: '', deadline: '' },
         // Phát triển Khách hàng Mới
         { id: 1, category: 'Phát triển Khách hàng Mới', name: 'Thực hiện mục tiêu/kế hoạch phát triển khách hàng nhóm UVS- Dầu gội phủ bạc', status: 'not-started', notes: '', deadline: '' },
         { id: 2, category: 'Phát triển Khách hàng Mới', name: 'Thực hiện mục tiêu/kế hoạch phát triển khách hàng nhóm thuốc', status: 'not-started', notes: 'Mục tiêu: 5 KH mới/tuần', deadline: '' },
         { id: 3, category: 'Phát triển Khách hàng Mới', name: 'Thực hiện kiểm tra- cập nhật lại báo cáo giao dịch theo phát sinh mới', status: 'not-started', notes: '', deadline: '' },
         { id: 4, category: 'Phát triển Khách hàng Mới', name: 'Gửi báo giá, đàm phán, thương lượng hợp đồng', status: 'not-started', notes: '', deadline: '' },
         { id: 5, category: 'Phát triển Khách hàng Mới', name:'Hoàn tất thủ tục mở khách hàng mới trên hệ thống', status: 'not-started', notes: '', deadline: '' },
-
         // Điều phối Đơn hàng & Vận hành
         { id: 1, category: 'Điều phối Đơn hàng & Vận hành', name: 'Xử lý - đối soát các nội dung cung cấp thông tin, chứng từ cho khách hàng', status: 'not-started', notes: '', deadline: '' },
         { id: 2, category: 'Điều phối Đơn hàng & Vận hành', name: 'Cập nhật lại các dữ liệu lên ứng dụng trong kỳ: khách hàng đặt hàng / chuôi NT ( nếu có)', status: 'not-started', notes: '', deadline: '' },
         { id: 3, category: 'Điều phối Đơn hàng & Vận hành', name: 'Xử lý các thủ tục phát sinh liên quan đến chứng từ/ tài liệu/hàng hóa nội bộ ', status: 'not-started', notes: 'Đảm bảo tuân thủ GDP, SOP', deadline: '' },
         { id: 4, category: 'Điều phối Đơn hàng & Vận hành', name: 'Theo dõi tiến trình giao hàng và xác nhận với khách hàng/ đổi trả hàng phát sinh', status: 'not-started', notes: '', deadline: '' },
         { id: 5, category: 'Điều phối Đơn hàng & Vận hành', name: 'Xử lý thông tin báo giá/văn bản thông báo giá/ in lưu chứng từ công việc trong tuần', status: 'not-started', notes: '', deadline: '' },
-
         // Báo cáo & Công việc Khác
         { id: 1, category: 'Báo cáo & Công việc Khác', name: 'Ra sót kế hoạch - bấm hoàn thành- báo cáo nội dung lưu chuyển báo cáo', status: 'not-started', notes: '', deadline: '' },
         { id: 2, category: 'Báo cáo & Công việc Khác', name: 'Ra soát cập nhật báo cáo giao dịch khách hàng cho đúng khai báo', status: 'not-started', notes: 'Hạn cuối: ngày 2 của tháng sau', deadline: '' },
         { id: 3, category: 'Báo cáo & Công việc Khác', name: 'Báo cáo KPI tháng - đối chiếu kết quả cuối kỳ nội bộ', status: 'not-started', notes: '', deadline: '' }
     ];
-    
+
     document.addEventListener('DOMContentLoaded', () => {
         selectionModal = new bootstrap.Modal(document.getElementById('sales-checklist-selectionModal'));
         mainAppModal = new bootstrap.Modal(document.getElementById('sales-checklist-mainAppModal'));
@@ -280,6 +299,103 @@
         document.getElementById('sales-checklist-selectionModal').addEventListener('shown.bs.modal', loadEmployeeList);
     });
 
+    // === CẬP NHẬT: Hàm updateStatus mới ===
+    function updateStatus(taskId, status) {
+        const task = currentChecklistData.tasks.find(t => t.id === taskId);
+        if (!task) return;
+
+        if (status === 'completed') {
+            const noteLength = (task.notes || '').trim().length;
+            if (noteLength < 20) {
+                // Hoàn lại trạng thái cũ
+                const select = document.querySelector(`select[onchange*="updateStatus(${taskId},"]`);
+                if (select) select.value = task.status;
+
+                // Hiển thị lỗi
+                const noteTextarea = document.querySelector(`textarea[onchange*="updateNotes(${taskId},"]`);
+                if (noteTextarea) {
+                    noteTextarea.classList.add('is-invalid');
+                    let errorEl = noteTextarea.parentElement.querySelector('.invalid-feedback');
+                    if (!errorEl) {
+                        errorEl = document.createElement('div');
+                        errorEl.className = 'invalid-feedback';
+                        errorEl.style.display = 'block';
+                        noteTextarea.parentElement.appendChild(errorEl);
+                    }
+                    errorEl.textContent = 'Viết ngắn gọi -đầy đủ nội dung hoàn thành ít nhất 20 ký tự.';
+                    noteTextarea.focus();
+                }
+                return;
+            } else {
+                // Xóa lỗi nếu hợp lệ
+                const noteTextarea = document.querySelector(`textarea[onchange*="updateNotes(${taskId},"]`);
+                if (noteTextarea) {
+                    noteTextarea.classList.remove('is-invalid');
+                    const errorEl = noteTextarea.parentElement.querySelector('.invalid-feedback');
+                    if (errorEl) errorEl.remove();
+                }
+            }
+        }
+
+        task.status = status;
+        const select = document.querySelector(`select[onchange*="updateStatus(${taskId},"]`);
+        if (select) updateSelectColor(select, status);
+        updateDashboard();
+        saveTasks();
+    }
+
+    // === CẬP NHẬT: renderTasks với placeholder theo category ===
+    function renderTasks(tasks) {
+        const now = new Date();
+        document.getElementById('sales-checklist-currentMonth').innerText = `KỲ BÁO CÁO: THÁNG ${now.getMonth() + 1} NĂM ${now.getFullYear()}`;
+        const taskListDiv = document.getElementById('sales-checklist-taskList');
+        taskListDiv.innerHTML = '';
+        const categories = [...new Set(tasks.map(task => task.category))];
+        categories.forEach(category => {
+            const card = document.createElement('div');
+            card.className = 'card sales-checklist-task-card';
+            let iconClass = 'bi-briefcase';
+            if (category.includes('Hiện tại')) iconClass = 'bi-person-check';
+            if (category.includes('Mới')) iconClass = 'bi-person-plus';
+            if (category.includes('Vận hành')) iconClass = 'bi-gear';
+            if (category.includes('Báo cáo')) iconClass = 'bi-clipboard-data';
+            card.innerHTML = `<div class="card-header"><i class="bi ${iconClass}"></i> ${category}</div>`;
+            const table = document.createElement('table');
+            table.className = 'table table-hover table-striped mb-0';
+            table.innerHTML = `<thead class="table-light"><tr><th style="width: 5%;">#</th><th style="width: 40%;">Nội dung công việc</th><th style="width: 15%;">Trạng thái</th><th style="width: 15%;">Hạn chót</th><th style="width: 25%;">Ghi chú</th></tr></thead>`;
+            const tbody = document.createElement('tbody');
+            tasks.filter(t => t.category === category).forEach(task => {
+                const placeholder = NOTE_PLACEHOLDERS[task.category] || 'Vui lòng mô tả chi tiết kết quả công việc...';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${task.id}</td>
+                    <td>${task.name}</td>
+                    <td><select class="form-select form-select-sm sales-checklist-status-select" onchange="updateStatus(${task.id}, this.value)">
+                        <option value="not-started">Chưa làm</option>
+                        <option value="in-progress">Đang làm</option>
+                        <option value="completed">Hoàn thành</option>
+                    </select></td>
+                    <td><input type="date" class="form-control form-control-sm" value="${task.deadline || ''}" onchange="updateDeadline(${task.id}, this.value)"></td>
+                    <td>
+                        <textarea class="form-control form-control-sm sales-checklist-notes-input" 
+                                  rows="2" 
+                                  placeholder="${placeholder}"
+                                  onchange="updateNotes(${task.id}, this.value)">${task.notes || ''}</textarea>
+                        <!-- Nơi chèn lỗi nếu cần -->
+                    </td>`;
+                const select = tr.querySelector('.sales-checklist-status-select');
+                select.value = task.status;
+                updateSelectColor(select, task.status);
+                tbody.appendChild(tr);
+            });
+            table.appendChild(tbody);
+            card.appendChild(table);
+            taskListDiv.appendChild(card);
+        });
+        updateDashboard();
+    }
+
+    // === Các hàm còn lại giữ nguyên ===
     function setButtonLoading(button, isLoading) {
         if (isLoading) {
             button.disabled = true;
@@ -353,7 +469,7 @@
             setButtonLoading(saveBtn, false);
         }
     }
-    
+
     async function loadChecklistFor(employeeId) {
         try {
             const snapshot = await database.ref('sales-checklists/' + employeeId).once('value');
@@ -396,12 +512,11 @@
         mainAppModal.hide();
         selectionModal.show();
     }
-    
+
     window.addTask = function() {
         const name = document.getElementById('sales-checklist-taskName').value;
         const category = document.getElementById('sales-checklist-taskCategory').value;
         const deadline = document.getElementById('sales-checklist-taskDeadline').value;
-
         if (name && category) {
             const newId = currentChecklistData.tasks.length > 0 ? Math.max(...currentChecklistData.tasks.map(t => t.id)) + 1 : 1;
             const newTask = {
@@ -411,7 +526,6 @@
             currentChecklistData.tasks.push(newTask);
             saveTasks();
             renderTasks(currentChecklistData.tasks);
-            
             addTaskModal.hide();
             document.getElementById('sales-checklist-addTaskForm').reset();
         } else {
@@ -429,51 +543,15 @@
         }
     }
 
-    function renderTasks(tasks) {
-        const now = new Date();
-        document.getElementById('sales-checklist-currentMonth').innerText = `KỲ BÁO CÁO: THÁNG ${now.getMonth() + 1} NĂM ${now.getFullYear()}`;
-        
-        const taskListDiv = document.getElementById('sales-checklist-taskList');
-        taskListDiv.innerHTML = '';
-        const categories = [...new Set(tasks.map(task => task.category))];
-        
-        categories.forEach(category => {
-            const card = document.createElement('div');
-            card.className = 'card sales-checklist-task-card';
-            let iconClass = 'bi-briefcase'; // Default icon
-            if (category.includes('Hiện tại')) iconClass = 'bi-person-check';
-            if (category.includes('Mới')) iconClass = 'bi-person-plus';
-            if (category.includes('Vận hành')) iconClass = 'bi-gear';
-            if (category.includes('Báo cáo')) iconClass = 'bi-clipboard-data';
-
-            card.innerHTML = `<div class="card-header"><i class="bi ${iconClass}"></i> ${category}</div>`;
-            
-            const table = document.createElement('table');
-            table.className = 'table table-hover table-striped mb-0';
-            table.innerHTML = `<thead class="table-light"><tr><th style="width: 5%;">#</th><th style="width: 40%;">Nội dung công việc</th><th style="width: 15%;">Trạng thái</th><th style="width: 15%;">Hạn chót</th><th style="width: 25%;">Ghi chú</th></tr></thead>`;
-            const tbody = document.createElement('tbody');
-            tasks.filter(t => t.category === category).forEach(task => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${task.id}</td><td>${task.name}</td>
-                    <td><select class="form-select form-select-sm sales-checklist-status-select" onchange="updateStatus(${task.id}, this.value)"><option value="not-started">Chưa làm</option><option value="in-progress">Đang làm</option><option value="completed">Hoàn thành</option></select></td>
-                    <td><input type="date" class="form-control form-control-sm" value="${task.deadline || ''}" onchange="updateDeadline(${task.id}, this.value)"></td>
-                    <td><textarea class="form-control form-control-sm sales-checklist-notes-input" rows="1" onchange="updateNotes(${task.id}, this.value)">${task.notes || ''}</textarea></td>`;
-                const select = tr.querySelector('.sales-checklist-status-select');
-                select.value = task.status;
-                updateSelectColor(select, task.status);
-                tbody.appendChild(tr);
-            });
-            table.appendChild(tbody);
-            card.appendChild(table);
-            taskListDiv.appendChild(card);
-        });
-        updateDashboard();
+    function updateNotes(taskId, notes) {
+        const task = currentChecklistData.tasks.find(t => t.id === taskId);
+        if(task){task.notes = notes; saveTasks();}
     }
 
-    function updateStatus(taskId, status) { const task = currentChecklistData.tasks.find(t => t.id === taskId); if (task) { task.status = status; updateSelectColor(event.target, status); updateDashboard(); saveTasks(); } }
-    function updateNotes(taskId, notes) { const task = currentChecklistData.tasks.find(t => t.id === taskId); if(task){task.notes = notes; saveTasks();} }
-    function updateDeadline(taskId, deadline) { const task = currentChecklistData.tasks.find(t => t.id === taskId); if(task){task.deadline = deadline; saveTasks();} }
+    function updateDeadline(taskId, deadline) {
+        const task = currentChecklistData.tasks.find(t => t.id === taskId);
+        if(task){task.deadline = deadline; saveTasks();}
+    }
 
     function updateDashboard() {
         if (!currentChecklistData) return;
@@ -489,7 +567,7 @@
         progressBar.style.width = `${percentage}%`;
         progressBar.innerText = `${percentage}%`;
     }
-    
+
     function updateSelectColor(select, status) {
         select.className = 'form-select form-select-sm sales-checklist-status-select';
         if (status === 'not-started') select.classList.add('sales-checklist-status-not-started');
@@ -505,8 +583,10 @@
         return str.replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
     }
 
-    window.copyReport = function() { navigator.clipboard.writeText(document.getElementById('sales-checklist-reportContent').innerText).then(() => alert('Đã sao chép báo cáo!')); };
-    
+    window.copyReport = function() {
+        navigator.clipboard.writeText(document.getElementById('sales-checklist-reportContent').innerText).then(() => alert('Đã sao chép báo cáo!'));
+    }
+
     document.getElementById('sales-checklist-reportModal').addEventListener('show.bs.modal', function () {
         if (!currentChecklistData) return;
         const { employeeName, tasks } = currentChecklistData;
@@ -515,7 +595,6 @@
         const inProgress = tasks.filter(t => t.status === 'in-progress').length;
         const notStarted = total - completed - inProgress;
         const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-        
         let reportText = `BÁO CÁO TIẾN ĐỘ CÔNG VIỆC KINH DOANH\n`;
         reportText += `=====================================\n`;
         reportText += `● Nhân viên: ${employeeName}\n`;
@@ -524,7 +603,6 @@
         reportText += `● Hoàn thành: ${completed}/${total} công việc (${percentage}%)\n`;
         reportText += `● Đang làm: ${inProgress} công việc\n`;
         reportText += `● Chưa làm: ${notStarted} công việc\n`;
-        
         reportText += `\n--- CHI TIẾT CÔNG VIỆC ---\n`;
         const categories = [...new Set(tasks.map(task => task.category))];
         categories.forEach(category => {
@@ -533,14 +611,12 @@
                 let statusLabel = 'Chưa làm';
                 if (task.status === 'completed') statusLabel = 'Hoàn thành';
                 else if (task.status === 'in-progress') statusLabel = 'Đang làm';
-
                 reportText += `  - [${statusLabel}] ${task.name}\n`; 
                 if (task.notes) {
                     reportText += `    └ Ghi chú: ${task.notes}\n`;
                 }
             });
         });
-        
         document.getElementById('sales-checklist-reportContent').innerText = reportText;
     });
 
@@ -555,25 +631,20 @@
             alert("Vui lòng chọn một checklist để làm mới.");
             return;
         }
-
         const loadingBtn = document.querySelector('.btn-warning');
         setButtonLoading(loadingBtn, true);
-
         try {
             const snapshot = await database.ref(`sales-checklists/${currentEmployeeId}`).once('value');
             const currentData = snapshot.val();
-            
             if (currentData) {
                 const newTasks = currentData.tasks.map(task => ({ ...task, status: 'not-started', notes: '', deadline: '' }));
                 await database.ref(`sales-checklists/${currentEmployeeId}/tasks`).set(newTasks);
-                
                 currentChecklistData.tasks = newTasks;
                 renderTasks(currentChecklistData.tasks);
                 alert("Đã làm mới checklist thành công cho kỳ mới!");
             } else {
                 alert("Không tìm thấy dữ liệu để làm mới.");
             }
-
         } catch (error) {
             console.error("Lỗi khi làm mới:", error);
             alert("Đã xảy ra lỗi khi làm mới checklist.");
@@ -581,7 +652,6 @@
             setButtonLoading(loadingBtn, false);
         }
     }
-
     </script>
 </body>
 </html>
