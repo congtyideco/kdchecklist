@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Checklist Pro - Xuất PDF</title>
+    <title>Sales Checklist Pro - Quản trị Mục tiêu</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
@@ -107,6 +107,7 @@
             transition: background-color 0.2s;
             padding: 4px 8px;
             border-radius: 4px;
+            font-weight: 600;
         }
         .sales-checklist-task-name:hover {
             background-color: #f8f9fa;
@@ -132,6 +133,53 @@
             padding-bottom: 0.5rem;
             border-bottom: 3px solid #0d6efd;
         }
+
+        /* === STYLE CHO PLANNER POPUP === */
+        #sales-checklist-plannerModal .modal-dialog { max-width: 98vw; margin: 1vw auto; }
+        #sales-checklist-plannerModal .modal-content { height: 96vh; }
+        #sales-checklist-plannerModal .modal-body { overflow-y: auto; background-color: #f0f2f5; padding: 10px; }
+        .planner-day-container {
+            background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden;
+        }
+        .planner-day-header {
+            background-color: #0d6efd; color: white; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .planner-day-title { font-weight: bold; font-size: 1.1rem; margin: 0; }
+        .planner-table input.form-control { border: none; border-radius: 0; background: transparent; }
+        .planner-table input.form-control:focus { box-shadow: none; background: #fff; }
+        
+        .planner-row-done { background-color: #ffebee !important; color: #c62828; }
+        .planner-row-done input { color: #c62828 !important; text-decoration: line-through; }
+
+        /* === STYLE MỚI: MỤC TIÊU CÔNG VIỆC === */
+        .planner-objective-box {
+            background-color: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; padding: 15px; margin-bottom: 20px;
+        }
+        .planner-objective-label { font-weight: bold; color: #0d47a1; margin-bottom: 5px; display: block; }
+        .planner-objective-input {
+            width: 100%; border: 1px solid #bbdefb; border-radius: 4px; padding: 8px; font-size: 1.1rem; color: #0d47a1;
+        }
+        .planner-objective-input:focus { outline: none; border-color: #2196f3; box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1); }
+
+        /* === CẢNH BÁO THÔNG MINH === */
+        #smart-alert-container {
+            display: none; background-color: #dc3545; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4); animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(220, 53, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+        }
+        .smart-alert-title { font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; }
+        .smart-alert-list { margin-top: 10px; margin-bottom: 0; padding-left: 20px; }
+        .smart-alert-list li { font-weight: 500; font-size: 1.1rem; }
+        
+        .task-overdue-badge {
+            background-color: #dc3545; color: white; font-size: 0.75rem; padding: 2px 8px; border-radius: 12px;
+            margin-left: 10px; font-weight: bold; animation: blink 1.5s infinite; display: inline-flex; align-items: center;
+        }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
@@ -189,6 +237,19 @@
                             <h2><i class="bi bi-card-checklist"></i> BẢNG CHECKLIST CÔNG VIỆC KINH DOANH THÁNG</h2>
                             <h5 id="sales-checklist-currentMonth"></h5>
                         </div>
+
+                        <div id="smart-alert-container">
+                            <div class="smart-alert-title">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i> 
+                                CẢNH BÁO: PHÁT HIỆN CÔNG VIỆC TRONG KẾ HOẠCH BỊ TRỄ HẠN!
+                            </div>
+                            <ul id="smart-alert-list" class="smart-alert-list">
+                                </ul>
+                            <div class="mt-2 text-end">
+                                <small style="font-style: italic;">(Các mục này sẽ BỊ KHÓA trạng thái Hoàn thành cho đến khi bạn xử lý xong trong Kế hoạch chi tiết)</small>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-lg-3">
                                 <div class="card sales-checklist-dashboard">
@@ -221,6 +282,23 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="sales-checklist-plannerModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title"><i class="bi bi-calendar-week"></i> KẾ HOẠCH CHI TIẾT TUẦN - <span id="planner-task-title-display" style="font-weight:bold; color: #fff; text-transform: uppercase;"></span></h5>
+                    <button type="button" class="btn-close btn-close-white" onclick="closePlannerModal()"></button>
+                </div>
+                <div class="modal-body" id="planner-body-content">
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closePlannerModal()">Quay lại Checklist</button>
+                    <button type="button" class="btn btn-primary" onclick="savePlannerData()"><i class="bi bi-save"></i> Lưu Kế Hoạch</button>
                 </div>
             </div>
         </div>
@@ -307,7 +385,16 @@
     const database = firebase.database();
     let currentEmployeeId = null;
     let currentChecklistData = null;
-    let selectionModal, mainAppModal, newEmployeeModal, addTaskModal;
+    let selectionModal, mainAppModal, newEmployeeModal, addTaskModal, plannerModal;
+    
+    // --- VARIABLES CHO PLANNER ---
+    let currentPlannerTaskId = null;
+    let currentPlannerData = {};
+    const PLANNER_DAYS = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"];
+    const DAY_INDEX_MAP = {
+        "Thứ 2": 1, "Thứ 3": 2, "Thứ 4": 3, "Thứ 5": 4, 
+        "Thứ 6": 5, "Thứ 7": 6, "Chủ Nhật": 7
+    };
 
     // === Định nghĩa placeholder theo loại công việc ===
     const NOTE_PLACEHOLDERS = {
@@ -348,21 +435,177 @@
         mainAppModal = new bootstrap.Modal(document.getElementById('sales-checklist-mainAppModal'));
         newEmployeeModal = new bootstrap.Modal(document.getElementById('sales-checklist-newEmployeeModal'));
         addTaskModal = new bootstrap.Modal(document.getElementById('sales-checklist-addTaskModal'));
+        plannerModal = new bootstrap.Modal(document.getElementById('sales-checklist-plannerModal'));
         document.getElementById('sales-checklist-selectionModal').addEventListener('shown.bs.modal', loadEmployeeList);
     });
 
-    // === CẬP NHẬT: Hàm updateStatus có kiểm tra ghi chú ===
+    // === QUẢN LÝ KẾ HOẠCH TUẦN & LOGIC THÔNG MINH ===
+    function openPlanner(taskId) {
+        currentPlannerTaskId = taskId;
+        const task = currentChecklistData.tasks.find(t => t.id === taskId);
+        if (!task) return;
+
+        currentPlannerData = task.weeklyPlan ? JSON.parse(JSON.stringify(task.weeklyPlan)) : {};
+        if (!currentPlannerData.objective) currentPlannerData.objective = '';
+
+        PLANNER_DAYS.forEach(day => {
+            if (!currentPlannerData[day]) currentPlannerData[day] = [];
+        });
+
+        document.getElementById('planner-task-title-display').innerText = task.name;
+        renderPlannerUI();
+        plannerModal.show();
+    }
+
+    function renderPlannerUI() {
+        const container = document.getElementById('planner-body-content');
+        container.innerHTML = '';
+
+        // 1. RENDER MỤC TIÊU
+        const objectiveDiv = document.createElement('div');
+        objectiveDiv.className = 'planner-objective-box';
+        objectiveDiv.innerHTML = `
+            <label class="planner-objective-label"><i class="bi bi-bullseye"></i> MỤC TIÊU / KẾT QUẢ THEN CHỐT CỦA CÔNG VIỆC:</label>
+            <input type="text" class="planner-objective-input" 
+                   value="${currentPlannerData.objective || ''}" 
+                   placeholder="Ví dụ: Đạt doanh số 50 triệu tuần này..." 
+                   onchange="updatePlannerObjective(this.value)">
+        `;
+        container.appendChild(objectiveDiv);
+
+        // 2. RENDER CÁC NGÀY
+        PLANNER_DAYS.forEach(day => {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'planner-day-container';
+            
+            let tableRows = '';
+            currentPlannerData[day].forEach((item, index) => {
+                const rowClass = item.isDone ? 'planner-row-done' : '';
+                const btnClass = item.isDone ? 'btn-danger' : 'btn-outline-success';
+                const btnIcon = item.isDone ? '<i class="bi bi-x-circle"></i> Đóng' : '<i class="bi bi-check2-circle"></i> Xong';
+                
+                tableRows += `
+                    <tr class="${rowClass}">
+                        <td style="width: 30%"><input type="text" class="form-control" value="${item.content || ''}" onchange="updatePlannerItem('${day}', ${index}, 'content', this.value)" placeholder="Nội dung công việc..."></td>
+                        <td style="width: 15%"><input type="date" class="form-control" value="${item.start || ''}" onchange="updatePlannerItem('${day}', ${index}, 'start', this.value)"></td>
+                        <td style="width: 15%"><input type="date" class="form-control" value="${item.end || ''}" onchange="updatePlannerItem('${day}', ${index}, 'end', this.value)"></td>
+                        <td style="width: 25%"><input type="text" class="form-control" value="${item.result || ''}" onchange="updatePlannerItem('${day}', ${index}, 'result', this.value)" placeholder="Kết quả..."></td>
+                        <td style="width: 15%" class="text-end">
+                            <button class="btn btn-sm ${btnClass} me-1" onclick="togglePlannerItemDone('${day}', ${index})">${btnIcon}</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="deletePlannerItem('${day}', ${index})"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            dayDiv.innerHTML = `
+                <div class="planner-day-header">
+                    <h5 class="planner-day-title">${day}</h5>
+                    <button class="btn btn-sm btn-light text-primary fw-bold" onclick="addPlannerItem('${day}')"><i class="bi bi-plus-lg"></i> Thêm việc</button>
+                </div>
+                <div class="p-2">
+                    <table class="table table-borderless planner-table mb-0 align-middle">
+                        <thead>
+                            <tr class="text-muted border-bottom" style="font-size: 0.85rem;">
+                                <th>Công việc</th>
+                                <th>Ngày BĐ</th>
+                                <th>Ngày KT</th>
+                                <th>Kết quả</th>
+                                <th class="text-end">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                    ${currentPlannerData[day].length === 0 ? '<div class="text-center text-muted fst-italic py-3">Chưa có kế hoạch cho ngày này</div>' : ''}
+                </div>
+            `;
+            container.appendChild(dayDiv);
+        });
+    }
+
+    function updatePlannerObjective(value) { currentPlannerData.objective = value; }
+    function addPlannerItem(day) { currentPlannerData[day].push({ content: '', start: '', end: '', result: '', isDone: false }); renderPlannerUI(); }
+    function deletePlannerItem(day, index) { if(confirm('Xóa dòng kế hoạch này?')) { currentPlannerData[day].splice(index, 1); renderPlannerUI(); } }
+    function togglePlannerItemDone(day, index) { currentPlannerData[day][index].isDone = !currentPlannerData[day][index].isDone; renderPlannerUI(); }
+    function updatePlannerItem(day, index, field, value) { currentPlannerData[day][index][field] = value; }
+
+    function savePlannerData() {
+        if (!currentPlannerTaskId) return;
+        const task = currentChecklistData.tasks.find(t => t.id === currentPlannerTaskId);
+        if (task) {
+            task.weeklyPlan = currentPlannerData;
+            saveTasks();
+            alert('Đã lưu kế hoạch tuần!');
+            checkDailyProgress();
+            renderTasks(currentChecklistData.tasks);
+        }
+    }
+    function closePlannerModal() { if(confirm('Các thay đổi chưa lưu sẽ bị mất. Bạn có chắc muốn đóng?')) { plannerModal.hide(); } }
+
+    // === LOGIC KIỂM TRA TRỄ HẠN THÔNG MINH ===
+    function getCurrentDayIndex() { const d = new Date(); const day = d.getDay(); return day === 0 ? 7 : day; }
+
+    function isTaskOverdue(task) {
+        if (!task.weeklyPlan) return false;
+        const currentIdx = getCurrentDayIndex();
+        
+        for (const [dayName, items] of Object.entries(task.weeklyPlan)) {
+            if (dayName === 'objective') continue;
+            const dayIdx = DAY_INDEX_MAP[dayName];
+            
+            // Chỉ kiểm tra các ngày trong quá khứ
+            if (dayIdx < currentIdx) {
+                if (items && Array.isArray(items)) {
+                    // Trễ hạn nếu: Có nội dung VÀ có ngày BĐ/KT VÀ chưa xong
+                    const hasOverdueItem = items.some(item => {
+                        const isConfigured = item.content && item.content.trim() !== '' && item.start && item.end;
+                        return isConfigured && !item.isDone;
+                    });
+                    if (hasOverdueItem) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function checkDailyProgress() {
+        if (!currentChecklistData) return;
+        const alertContainer = document.getElementById('smart-alert-container');
+        const alertList = document.getElementById('smart-alert-list');
+        let unfinishedTasks = [];
+
+        currentChecklistData.tasks.forEach(task => {
+            if (isTaskOverdue(task)) { unfinishedTasks.push(task.name); }
+        });
+
+        if (unfinishedTasks.length > 0) {
+            alertList.innerHTML = '';
+            unfinishedTasks.forEach(name => {
+                const li = document.createElement('li'); li.innerText = name; alertList.appendChild(li);
+            });
+            alertContainer.style.display = 'block'; 
+        } else {
+            alertContainer.style.display = 'none'; 
+        }
+    }
+
+    // === CẬP NHẬT: Hàm updateStatus có kiểm tra KHÓA TRẠNG THÁI ===
     function updateStatus(taskId, status, selectElement) {
         const task = currentChecklistData.tasks.find(t => t.id === taskId);
         if (!task) return;
 
+        // KIỂM TRA 1: KHÓA TRẠNG THÁI NẾU TRỄ HẠN PLANNER
+        if (status === 'completed' && isTaskOverdue(task)) {
+            alert('CẢNH BÁO QUẢN TRỊ:\n\nCông việc này đang có hạng mục trong Kế hoạch chi tiết bị TRỄ HẠN.\n\nVui lòng vào "Lập KH" để xử lý dứt điểm trước khi báo cáo hoàn thành.');
+            selectElement.value = task.status;
+            return;
+        }
+
+        // KIỂM TRA 2: ĐỘ DÀI GHI CHÚ
         if (status === 'completed') {
             const noteLength = (task.notes || '').trim().length;
             if (noteLength < 20) {
-                // Hoàn lại trạng thái cũ
                 selectElement.value = task.status;
-
-                // Hiển thị lỗi
                 const noteTextarea = document.querySelector(`textarea[onchange*="updateNotes(${taskId},"]`);
                 if (noteTextarea) {
                     noteTextarea.classList.add('is-invalid');
@@ -406,36 +649,22 @@
     function editTaskName(taskId) {
         const task = currentChecklistData.tasks.find(t => t.id === taskId);
         if (!task) return;
-        
         const taskElement = document.querySelector(`[data-task-id="${taskId}"] .sales-checklist-task-name`);
         if (!taskElement) return;
         
         const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'sales-checklist-task-name-input';
-        input.value = task.name;
+        input.type = 'text'; input.className = 'sales-checklist-task-name-input'; input.value = task.name;
         
-        taskElement.classList.add('editing');
-        taskElement.innerHTML = '';
-        taskElement.appendChild(input);
-        input.focus();
+        taskElement.classList.add('editing'); taskElement.innerHTML = ''; taskElement.appendChild(input); input.focus();
         
         const finishEdit = () => {
             const newName = input.value.trim();
-            if (newName && newName !== task.name) {
-                updateTaskName(taskId, newName);
-            } else {
-                taskElement.textContent = task.name;
-            }
+            if (newName && newName !== task.name) { updateTaskName(taskId, newName); } 
+            else { taskElement.textContent = task.name; }
             taskElement.classList.remove('editing');
         };
-        
         input.addEventListener('blur', finishEdit);
-        input.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                finishEdit();
-            }
-        });
+        input.addEventListener('keypress', (e) => { if (e.key === 'Enter') finishEdit(); });
     }
 
     function updateTaskName(taskId, newName) {
@@ -443,10 +672,7 @@
         if (task) { 
             task.name = newName; 
             saveTasks();
-            const taskElement = document.querySelector(`[data-task-id="${taskId}"] .sales-checklist-task-name`);
-            if (taskElement) {
-                taskElement.textContent = newName;
-            }
+            renderTasks(currentChecklistData.tasks);
         }
     }
 
@@ -498,9 +724,10 @@
                 <thead class="table-light">
                     <tr>
                         <th style="width: 5%;">#</th>
-                        <th style="width: 40%;">Nội dung công việc</th>
+                        <th style="width: 35%;">Nội dung công việc</th>
                         <th style="width: 15%;">Trạng thái</th>
-                        <th style="width: 15%;">Hạn chót</th>
+                        <th style="width: 10%;">Kế hoạch</th>
+                        <th style="width: 10%;">Hạn chót</th>
                         <th style="width: 20%;">Ghi chú</th>
                         <th style="width: 5%;">Xóa</th>
                     </tr>
@@ -508,6 +735,12 @@
             const tbody = document.createElement('tbody');
             tasks.filter(t => t.category === category).forEach(task => {
                 const placeholder = NOTE_PLACEHOLDERS[task.category] || 'Vui lòng mô tả chi tiết kết quả công việc...';
+                
+                // Hiển thị Badge nếu trễ hạn
+                const overdueBadge = isTaskOverdue(task) 
+                    ? `<span class="task-overdue-badge"><i class="bi bi-exclamation-octagon-fill"></i> CÓ VIỆC TRỄ HẠN</span>` 
+                    : '';
+
                 const tr = document.createElement('tr');
                 tr.setAttribute('data-task-id', task.id);
                 tr.innerHTML = `
@@ -516,6 +749,7 @@
                         <div class="sales-checklist-task-name" onclick="editTaskName(${task.id})">
                             ${task.name}
                         </div>
+                        ${overdueBadge}
                     </td>
                     <td>
                         <select class="form-select form-select-sm sales-checklist-status-select" 
@@ -524,6 +758,11 @@
                             <option value="in-progress">Đang làm</option>
                             <option value="completed">Hoàn thành</option>
                         </select>
+                    </td>
+                    <td>
+                        <button class="btn btn-dark btn-sm text-white w-100 fw-bold" onclick="openPlanner(${task.id})">
+                            <i class="bi bi-calendar-check"></i> Lập KH
+                        </button>
                     </td>
                     <td><input type="date" class="form-control form-control-sm" value="${task.deadline || ''}" onchange="updateDeadline(${task.id}, this.value)"></td>
                     <td>
@@ -701,6 +940,8 @@
         const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
         progressBar.style.width = `${percentage}%`;
         progressBar.innerText = `${percentage}%`;
+        
+        checkDailyProgress(); // GỌI SMART CHECK
     }
 
     function updateSelectColor(select, status) {
@@ -718,7 +959,7 @@
         return str.replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
     }
 
-    // === CHỨC NĂNG XUẤT PDF MỚI ===
+    // === CHỨC NĂNG XUẤT PDF (CẬP NHẬT HIỂN THỊ MỤC TIÊU) ===
     document.getElementById('sales-checklist-reportModal').addEventListener('show.bs.modal', function () {
         if (!currentChecklistData) return;
         const { employeeName, tasks } = currentChecklistData;
@@ -731,7 +972,6 @@
         const notStarted = total - completed - inProgress;
         const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-        // Tạo nội dung HTML cho báo cáo
         let html = `
             <div class="report-header">
                 <h3 class="report-title">BÁO CÁO CÔNG VIỆC KINH DOANH</h3>
@@ -773,9 +1013,10 @@
                 <table class="table table-bordered table-sm mt-2" style="font-size: 13px;">
                     <thead class="table-light">
                         <tr>
-                            <th style="width: 50%">Nội dung công việc</th>
+                            <th style="width: 40%">Nội dung công việc</th>
+                            <th style="width: 20%">Mục tiêu</th>
                             <th style="width: 15%">Trạng thái</th>
-                            <th style="width: 35%">Ghi chú / Kết quả</th>
+                            <th style="width: 25%">Ghi chú / Kết quả</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -787,9 +1028,15 @@
                 else if (task.status === 'in-progress') { statusText = 'Đang làm'; statusClass = 'text-warning fw-bold'; }
                 else { statusText = 'Chưa làm'; statusClass = 'text-secondary'; }
 
+                let objective = '';
+                if (task.weeklyPlan && task.weeklyPlan.objective) {
+                    objective = `<span class="text-primary fst-italic">${task.weeklyPlan.objective}</span>`;
+                }
+
                 html += `
                     <tr>
                         <td>${task.name}</td>
+                        <td>${objective}</td>
                         <td class="${statusClass}">${statusText}</td>
                         <td>${task.notes || ''}</td>
                     </tr>
@@ -801,7 +1048,6 @@
         document.getElementById('sales-checklist-reportContent').innerHTML = html;
     });
 
-    // Hàm xuất PDF
     window.exportToPDF = function() {
         const element = document.getElementById('sales-checklist-reportContent');
         if (!currentChecklistData) return;
@@ -841,6 +1087,7 @@
         currentChecklistData.tasks.forEach(task => {
             task.status = 'not-started';
             task.notes = '';
+            task.weeklyPlan = null;
         });
         try {
             await saveTasks();
