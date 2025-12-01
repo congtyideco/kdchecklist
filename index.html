@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Checklist Pro - Quản trị Mục tiêu & Báo cáo Chi tiết</title>
+    <title>Sales Checklist Pro - Quản trị Mục tiêu & Báo cáo Chi tiết (Smart Alert Fixed)</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
@@ -542,27 +542,40 @@
     }
     function closePlannerModal() { if(confirm('Các thay đổi chưa lưu sẽ bị mất. Bạn có chắc muốn đóng?')) { plannerModal.hide(); } }
 
-    // === LOGIC KIỂM TRA TRỄ HẠN THÔNG MINH ===
+    // === LOGIC KIỂM TRA TRỄ HẠN THÔNG MINH (UPDATED) ===
     function getCurrentDayIndex() { const d = new Date(); const day = d.getDay(); return day === 0 ? 7 : day; }
 
     function isTaskOverdue(task) {
         if (!task.weeklyPlan) return false;
-        const currentIdx = getCurrentDayIndex();
+        
+        // 1. Lấy ngày hôm nay (reset về 0h00 để so sánh chính xác)
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
         
         for (const [dayName, items] of Object.entries(task.weeklyPlan)) {
+            // Bỏ qua field objective
             if (dayName === 'objective') continue;
-            const dayIdx = DAY_INDEX_MAP[dayName];
-            
-            // Chỉ kiểm tra các ngày trong quá khứ
-            if (dayIdx < currentIdx) {
-                if (items && Array.isArray(items)) {
-                    // Trễ hạn nếu: Có nội dung VÀ có ngày BĐ/KT VÀ chưa xong
-                    const hasOverdueItem = items.some(item => {
-                        const isConfigured = item.content && item.content.trim() !== '' && item.start && item.end;
-                        return isConfigured && !item.isDone;
-                    });
-                    if (hasOverdueItem) return true;
-                }
+
+            if (items && Array.isArray(items)) {
+                // Logic mới: Một item được coi là trễ hạn khi:
+                // 1. Chưa xong (!isDone)
+                // 2. ĐÃ CÓ Nội dung (content) VÀ Ngày kết thúc (end)
+                // 3. NGÀY KẾT THÚC < NGÀY HÔM NAY (Quá khứ)
+                const hasOverdueItem = items.some(item => {
+                    if (!item.content || !item.content.trim() || !item.end) return false;
+                    
+                    // Nếu đã xong thì bỏ qua
+                    if (item.isDone) return false;
+
+                    // So sánh ngày kết thúc với ngày hôm nay
+                    const endDate = new Date(item.end);
+                    endDate.setHours(0, 0, 0, 0);
+
+                    // Nếu ngày kết thúc NHỎ HƠN ngày hôm nay -> Đã quá hạn
+                    return endDate < today;
+                });
+
+                if (hasOverdueItem) return true;
             }
         }
         return false;
@@ -596,7 +609,7 @@
 
         // KIỂM TRA 1: KHÓA TRẠNG THÁI NẾU TRỄ HẠN PLANNER
         if (status === 'completed' && isTaskOverdue(task)) {
-            alert('CẢNH BÁO QUẢN TRỊ:\n\nCông việc này đang có hạng mục trong Kế hoạch chi tiết bị TRỄ HẠN.\n\nVui lòng vào "Lập KH" để xử lý dứt điểm trước khi báo cáo hoàn thành.');
+            alert('CẢNH BÁO QUẢN TRỊ:\n\nCông việc này đang có hạng mục trong Kế hoạch chi tiết bị TRỄ HẠN hoặc CHƯA HOÀN THÀNH.\n\nVui lòng vào "Lập KH" để xử lý dứt điểm trước khi báo cáo hoàn thành.');
             selectElement.value = task.status;
             return;
         }
